@@ -1,0 +1,15 @@
+package com.visualassistant.app.modes
+
+enum class AppState {
+    ONBOARDING,
+    HAPTIC_TRAINING,
+    MODE_SELECTION,
+
+    READ_SCANNING,
+    READ_PROCESSING,
+    READ_CONVERSATION,
+
+    CURRENCY_SCANNING,
+    CURRENCY_PROCESSING,
+    CURRENCY_RESULT
+}
