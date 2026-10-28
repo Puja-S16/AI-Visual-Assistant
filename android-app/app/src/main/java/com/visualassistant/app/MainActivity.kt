@@ -25,6 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.res.painterResource
 
 import com.visualassistant.app.accessibility.HapticSignal
 import com.visualassistant.app.accessibility.HapticTrainingManager
@@ -66,6 +73,9 @@ class MainActivity : ComponentActivity() {
     private lateinit var currencyClassifier: CurrencyClassifier
 
     private var currentAppState by mutableStateOf(AppState.ONBOARDING)
+    private var displayedText by mutableStateOf("")
+
+    private var displayedCurrency by mutableStateOf("")
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -188,11 +198,10 @@ class MainActivity : ComponentActivity() {
                     AppState.READ_SCANNING -> {
 
                         CameraScreen(
-
+                            displayedText = displayedText,
                             onCapture = { bitmap ->
                                 handleCapture(bitmap)
                             },
-
                             onSessionEnd = {
                                 handleSessionEnd()
                             }
@@ -202,11 +211,10 @@ class MainActivity : ComponentActivity() {
                     AppState.CURRENCY_SCANNING -> {
 
                         CameraScreen(
-
+                            displayedCurrency = displayedCurrency,
                             onCapture = { bitmap ->
                                 handleCapture(bitmap)
                             },
-
                             onSessionEnd = {
                                 handleSessionEnd()
                             }
@@ -433,7 +441,10 @@ class MainActivity : ComponentActivity() {
 
                     onSuccess = { detectedText ->
 
+                        displayedText = detectedText
+
                         if (detectedText.isBlank()) {
+                            
 
                             vibrationManager.error()
 
@@ -481,6 +492,8 @@ class MainActivity : ComponentActivity() {
 
                     val denomination = result.denomination
                     val confidence = result.confidence
+
+                    displayedCurrency = "₹$denomination"
 
                     if (confidence >= 0.60f) {
 
@@ -904,29 +917,65 @@ class MainActivity : ComponentActivity() {
 // MODE SELECTION PLACEHOLDER
 // ---------------------------------------------------------
 
+
 @Composable
 private fun ModeSelectionPlaceholder() {
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
-
-        horizontalAlignment =
-            Alignment.CenterHorizontally,
-
-        verticalArrangement =
-            Arrangement.Center
+            .padding(32.dp)
     ) {
 
+        
+        Image(
+            painter = painterResource(id = R.drawable.college_logo),
+            contentDescription = "College Logo",
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .size(64.dp)
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.dept_logo),
+            contentDescription = "AIML Department Logo",
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .size(64.dp)
+        )
+
+
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            Text(text = "Mode Selection")
+
+            Text(
+                text = "Volume Up: Read Mode | Volume Down: Currency Mode"
+            )
+        }
+
         Text(
-            text = "Mode Selection"
+            text = "Puja Sharma\nSneha Kumari",
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(end = 8.dp),
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            fontWeight = FontWeight.Medium
         )
 
         Text(
-            text =
-                "Volume Up: Read Mode | " +
-                        "Volume Down: Currency Mode"
+            text = "AI-Powered\nVisual Assistant",
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(start = 8.dp),
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            fontWeight = FontWeight.Medium
         )
     }
 }

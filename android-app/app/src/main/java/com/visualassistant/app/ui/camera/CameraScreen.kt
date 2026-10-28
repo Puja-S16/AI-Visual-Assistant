@@ -27,11 +27,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+
 import com.visualassistant.app.modes.TouchGestureHandler
 import java.io.File
 
 @Composable
 fun CameraScreen(
+    displayedText: String = "",
+    displayedCurrency: String = "",
     onCapture: (Bitmap) -> Unit,
     onSessionEnd: () -> Unit
 ) {
@@ -167,6 +177,42 @@ fun CameraScreen(
                 previewView
             }
         )
+                if (displayedText.isNotBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .background(
+                                color = Color.Black.copy(alpha = 0.8f),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = displayedText,
+                            color = Color.White
+                        )
+                    }
+                }
+                if (displayedCurrency.isNotBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .background(
+                                color = Color.Black.copy(alpha = 0.8f),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .padding(20.dp)
+                    ) {
+                        Text(
+                            text = "Detected Currency: $displayedCurrency",
+                            color = Color.White
+                        )
+                    }
+                }
     }
 }
 
